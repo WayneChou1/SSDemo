@@ -19,6 +19,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         // Debug
         DDLog.removeAllLoggers()
         DDLog.add(DDASLLogger.sharedInstance, with: DDLogLevel.info)
+        DDLogDebug("SSDemo start Tunnel!")
         
         guard let conf = (protocolConfiguration as! NETunnelProviderProtocol).providerConfiguration else {
             NSLog("[ERROR] No ProtocolConfiguration Found")
@@ -26,14 +27,14 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         }
         
         let ss_adr = conf["ss_address"] as! String
-        let ss_port = conf["ss_port"] as! Int
+        let ss_port = conf["ss_port"] as! String
         let method = conf["ss_method"] as! String
         let password = conf["ss_password"] as!String
         
         //
         proxyPort =  9090
         let networkSettings = NEPacketTunnelNetworkSettings.init(tunnelRemoteAddress: "8.8.8.8")
-        networkSettings.mtu = 1000
+        networkSettings.mtu = 1500
         
         // set up ipv4
         let ipv4Settings = NEIPv4Settings(addresses: ["192.169.89.1"], subnetMasks: ["255.255.255.0"])
