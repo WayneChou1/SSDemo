@@ -1,0 +1,19 @@
+source 'https://github.com/CocoaPods/Specs.git'
+
+platform :ios, '9.0'
+use_frameworks!
+
+def common
+    pod 'CocoaAsyncSocket'
+    pod 'CocoaLumberjack/Swift', '~>3.4.2'
+end
+
+target "SSDemo" do
+    common
+end
+
+
+target "SSPacketTunnel" do
+    common
+end
+
