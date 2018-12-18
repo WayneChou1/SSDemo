@@ -20,6 +20,7 @@
 		621AE13F21C7488A00BFFDD0 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 621AE13E21C7488A00BFFDD0 /* NetworkExtension.framework */; };
 		621AE14121C7489700BFFDD0 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 621AE13E21C7488A00BFFDD0 /* NetworkExtension.framework */; };
 		621AE14321C78DCC00BFFDD0 /* VPNManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 621AE14221C78DCB00BFFDD0 /* VPNManager.swift */; };
+		621C296F21C883EB00EB0192 /* SockClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 621C296E21C883EA00EB0192 /* SockClient.swift */; };
 		8770814CA03635A39BF4CD49 /* Pods_SSDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C635844829779E449918A400 /* Pods_SSDemo.framework */; };
 /* End PBXBuildFile section */
 
@@ -84,6 +85,7 @@
 		621AE13E21C7488A00BFFDD0 /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
 		621AE14021C7488A00BFFDD0 /* SSDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SSDemo.entitlements; sourceTree = "<group>"; };
 		621AE14221C78DCB00BFFDD0 /* VPNManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VPNManager.swift; sourceTree = "<group>"; };
+		621C296E21C883EA00EB0192 /* SockClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SockClient.swift; sourceTree = "<group>"; };
 		8744BC1CA70C4F213B3B109F /* Pods-SSPacketTunnel.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SSPacketTunnel.release.xcconfig"; path = "Pods/Target Support Files/Pods-SSPacketTunnel/Pods-SSPacketTunnel.release.xcconfig"; sourceTree = "<group>"; };
 		A903940CCF5CE52090C09CA1 /* Pods_SSPacketTunnel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SSPacketTunnel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1C99BB5A266B0378DEECD62 /* Pods-SSPacketTunnel.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SSPacketTunnel.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SSPacketTunnel/Pods-SSPacketTunnel.debug.xcconfig"; sourceTree = "<group>"; };
@@ -198,6 +200,7 @@
 			isa = PBXGroup;
 			children = (
 				621AE13321C7471000BFFDD0 /* PacketTunnelProvider.swift */,
+				621C296E21C883EA00EB0192 /* SockClient.swift */,
 				621AE13521C7471000BFFDD0 /* Info.plist */,
 				621AE13121C7471000BFFDD0 /* Supporting Files */,
 			);
@@ -493,6 +496,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				621C296F21C883EB00EB0192 /* SockClient.swift in Sources */,
 				621AE13421C7471000BFFDD0 /* PacketTunnelProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
