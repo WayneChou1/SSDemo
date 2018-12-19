@@ -13,12 +13,16 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 	var pendingStartCompletion: ((NSError?) -> Void)?
     var lastPath:NWPath?
     var proxyPort: Int!
+    var serverIsOn: Bool = false
+    var proxyServer:SockClient?
+    
     
     override func startTunnel(options: [String : NSObject]? = nil, completionHandler: @escaping (Error?) -> Void) {
         
         // Debug
         DDLog.removeAllLoggers()
         DDLog.add(DDASLLogger.sharedInstance, with: DDLogLevel.info)
+        DDLogDebug("SSDemo start Tunnel!")
         
         guard let conf = (protocolConfiguration as! NETunnelProviderProtocol).providerConfiguration else {
             NSLog("[ERROR] No ProtocolConfiguration Found")
@@ -26,29 +30,17 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         }
         
         let ss_adr = conf["ss_address"] as! String
-        let ss_port = conf["ss_port"] as! Int
+        let ss_port = conf["ss_port"] as! String
         let method = conf["ss_method"] as! String
         let password = conf["ss_password"] as!String
         
         //
         proxyPort =  9090
         let networkSettings = NEPacketTunnelNetworkSettings.init(tunnelRemoteAddress: "8.8.8.8")
-        networkSettings.mtu = 1000
+        networkSettings.mtu = 1500
         
         // set up ipv4
         let ipv4Settings = NEIPv4Settings(addresses: ["192.169.89.1"], subnetMasks: ["255.255.255.0"])
-//        if enablePacketProcessing {
-//            ipv4Settings.includedRoutes = [NEIPv4Route.default()]
-//            ipv4Settings.excludedRoutes = [
-//                NEIPv4Route(destinationAddress: "10.0.0.0", subnetMask: "255.0.0.0"),
-//                NEIPv4Route(destinationAddress: "100.64.0.0", subnetMask: "255.192.0.0"),
-//                NEIPv4Route(destinationAddress: "127.0.0.0", subnetMask: "255.0.0.0"),
-//                NEIPv4Route(destinationAddress: "169.254.0.0", subnetMask: "255.255.0.0"),
-//                NEIPv4Route(destinationAddress: "172.16.0.0", subnetMask: "255.240.0.0"),
-//                NEIPv4Route(destinationAddress: "192.168.0.0", subnetMask: "255.255.0.0"),
-//                NEIPv4Route(destinationAddress: "17.0.0.0", subnetMask: "255.0.0.0"),
-//            ]
-//        }
         networkSettings.ipv4Settings = ipv4Settings
         let proxySettings = NEProxySettings()
         //        proxySettings.autoProxyConfigurationEnabled = true
@@ -63,40 +55,32 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         proxySettings.exceptionList = ["api.smoot.apple.com","configuration.apple.com","xp.apple.com","smp-device-content.apple.com","guzzoni.apple.com","captive.apple.com","*.ess.apple.com","*.push.apple.com","*.push-apple.com.akadns.net"]
         networkSettings.proxySettings = proxySettings
         
-        // the 198.18.0.0/15 is reserved for benchmark.
-//        if enablePacketProcessing {
-//            let DNSSettings = NEDNSSettings(servers: ["198.18.0.1"])
-//            DNSSettings.matchDomains = [""]
-//            DNSSettings.matchDomainsNoSearch = false
-//            networkSettings.dnsSettings = DNSSettings
-//        }
-        
-        setTunnelNetworkSettings(networkSettings) { (error:Error?) in
+        setTunnelNetworkSettings(networkSettings) {
+            error in
             guard error == nil else {
+                DDLogError("Encountered an error setting up the network: \(error.debugDescription)")
                 completionHandler(error)
                 return
             }
-            completionHandler(nil)
-        }
-//        setTunnelNetworkSettings(networkSettings) {
-//            error in
-//            guard error == nil else {
-//                DDLogError("Encountered an error setting up the network: \(error.debugDescription)")
-//                completionHandler(error)
-//                return
-//            }
-//
-//            if (!self.started) {
+
+            if (!self.serverIsOn) {
 //                self.proxyServer = GCDHTTPProxyServer(address: IPAddress(fromString: "127.0.0.1"), port: NEKit.Port(port: UInt16(self.proxyPort)))
 //                try! self.proxyServer.start()
 //                self.addObserver(self, forKeyPath: "defaultPath", options: .initial, context: nil)
-//            } else {
+                self.proxyServer = SockClient.init(host: "", port: 0)
+                self.proxyServer?.acceptedLocalPort(interface: "127.0.0.1", port: UInt16(self.proxyPort), completionHandler: { (bool:Bool) in
+                    if bool {
+                        DDLogDebug("绑定成功！")
+                    }else{
+                        DDLogDebug("绑定失败！")
+                    }
+                })
+            } else {
 //                self.proxyServer.stop()
 //                try! self.proxyServer.start()
-//            }
-            
-//            completionHandler(nil)
-        
+            }
+            completionHandler(nil)
+            self.serverIsOn = true
             
 //            if (self.enablePacketProcessing) {
 //                if (self.started) {
@@ -123,9 +107,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 //                self.interface.register(stack:tcpStack)
 //                self.interface.start()
 //            }
-//            self.started = true
-            
-//        }
+        }
     }
 
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
